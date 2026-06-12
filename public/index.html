@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ATM Finder</title>
+<title>Пошук банкоматів</title>
 
 <style>
   body {
@@ -18,22 +18,22 @@
   }
 
   .card {
-    background: rgba(255,255,255,0.05);
-    padding: 30px;
+    background: rgba(255,255,255,0.06);
+    padding: 28px;
     border-radius: 20px;
     text-align: center;
-    width: 320px;
+    width: 340px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     backdrop-filter: blur(10px);
   }
 
   h1 {
-    margin-bottom: 10px;
-    font-size: 22px;
+    font-size: 20px;
+    margin-bottom: 8px;
   }
 
   p {
-    font-size: 14px;
+    font-size: 13px;
     opacity: 0.7;
     margin-bottom: 20px;
   }
@@ -41,21 +41,34 @@
   button {
     width: 100%;
     padding: 12px;
+    margin: 8px 0;
     border: none;
     border-radius: 12px;
-    background: #3b82f6;
-    color: white;
-    font-size: 16px;
+    font-size: 15px;
     cursor: pointer;
     transition: 0.2s;
   }
 
-  button:hover {
+  .primary {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .primary:hover {
     background: #2563eb;
   }
 
+  .secondary {
+    background: rgba(255,255,255,0.1);
+    color: white;
+  }
+
+  .secondary:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
   .small {
-    margin-top: 15px;
+    margin-top: 12px;
     font-size: 12px;
     opacity: 0.6;
   }
@@ -65,18 +78,42 @@
 <body>
 
 <div class="card">
-  <h1>💳 ATM Finder</h1>
-  <p>Find nearest ATMs & cash points instantly</p>
+  <h1>🏧 Пошук банкоматів</h1>
+  <p>Знайдіть найближчі банкомати або каси з видачею готівки</p>
 
-  <button onclick="findATMs()">Find ATMs near me</button>
+  <button class="primary" onclick="знайтиБанкомати()">
+    📍 Знайти банкомати поруч
+  </button>
 
-  <div class="small">Uses your location & Google Maps</div>
+  <button class="secondary" onclick="знайтиУкрсиббанк()">
+    🏦 Банкомати УКРСИББАНК
+  </button>
+
+  <button class="secondary" onclick="знайтиКешбек()">
+    💳 Зняття готівки на касі
+  </button>
+
+  <div class="small">
+    Використовує вашу геолокацію та Google Maps
+  </div>
 </div>
 
 <script>
-function findATMs() {
+function знайтиБанкомати() {
+  openMap("ATM");
+}
+
+function знайтиУкрсиббанк() {
+  openMap("УКРСИББАНК банкомат");
+}
+
+function знайтиКешбек() {
+  openMap("cash back магазин банкомат");
+}
+
+function openMap(query) {
   if (!navigator.geolocation) {
-    alert("Geolocation not supported");
+    alert("Геолокація не підтримується");
     return;
   }
 
@@ -84,11 +121,11 @@ function findATMs() {
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
 
-    const url = `https://www.google.com/maps/search/ATM/@${lat},${lon},15z`;
+    const url = `https://www.google.com/maps/search/${query}/@${lat},${lon},15z`;
 
     window.open(url, "_blank");
   }, () => {
-    alert("Location access denied");
+    alert("Доступ до геолокації заборонено");
   });
 }
 </script>
