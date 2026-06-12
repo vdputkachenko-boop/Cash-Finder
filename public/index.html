@@ -3,131 +3,198 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Пошук банкоматів</title>
+<title>Cash Point Finder</title>
 
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+  background: #0b1220;
+  color: white;
+}
 
-  .card {
-    background: rgba(255,255,255,0.06);
-    padding: 28px;
-    border-radius: 20px;
-    text-align: center;
-    width: 340px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    backdrop-filter: blur(10px);
-  }
+.header {
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
 
-  h1 {
-    font-size: 20px;
-    margin-bottom: 8px;
-  }
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
 
-  p {
-    font-size: 13px;
-    opacity: 0.7;
-    margin-bottom: 20px;
-  }
+.header p {
+  opacity: 0.9;
+  margin-top: 8px;
+  font-size: 14px;
+}
 
-  button {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 12px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+.container {
+  padding: 20px;
+}
 
-  .primary {
-    background: #3b82f6;
-    color: white;
-  }
+.status {
+  background: rgba(255,255,255,0.05);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  color: #93c5fd;
+}
 
-  .primary:hover {
-    background: #2563eb;
-  }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 
-  .secondary {
-    background: rgba(255,255,255,0.1);
-    color: white;
-  }
+.card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+}
 
-  .secondary:hover {
-    background: rgba(255,255,255,0.2);
-  }
+.card:hover {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.1);
+}
 
-  .small {
-    margin-top: 12px;
-    font-size: 12px;
-    opacity: 0.6;
-  }
+.icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.big-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.big-btn:hover {
+  opacity: 0.9;
+}
+
+.footer {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.5;
+  margin-top: 25px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="card">
-  <h1>🏧 Пошук банкоматів</h1>
-  <p>Знайдіть найближчі банкомати або каси з видачею готівки</p>
+<div class="header">
+  <h1>🏧 Cash Point Finder</h1>
+  <p>Знайди найближчі банкомати, Cash Back та точки видачі готівки</p>
+</div>
 
-  <button class="primary" onclick="знайтиБанкомати()">
-    📍 Знайти банкомати поруч
-  </button>
+<div class="container">
 
-  <button class="secondary" onclick="знайтиУкрсиббанк()">
-    🏦 Банкомати УКРСИББАНК
-  </button>
-
-  <button class="secondary" onclick="знайтиКешбек()">
-    💳 Зняття готівки на касі
-  </button>
-
-  <div class="small">
-    Використовує вашу геолокацію та Google Maps
+  <div class="status" id="status">
+    📍 Очікуємо визначення геолокації...
   </div>
+
+  <div class="grid">
+    <div class="card" onclick="search('ukrsib')">
+      <div class="icon">🏦</div>
+      <div class="title">УКРСИББАНК</div>
+    </div>
+
+    <div class="card" onclick="search('atm')">
+      <div class="icon">💳</div>
+      <div class="title">ІНШІ БАНКОМАТИ</div>
+    </div>
+
+    <div class="card" onclick="search('cashback')">
+      <div class="icon">🛒</div>
+      <div class="title">CASH BACK</div>
+    </div>
+
+    <div class="card" onclick="search('fuel')">
+      <div class="icon">⛽</div>
+      <div class="title">АЗС</div>
+    </div>
+  </div>
+
+  <button class="big-btn" onclick="getLocation()">
+    📍 Визначити мою геолокацію
+  </button>
+
+  <div class="footer">
+    MVP для хакатону • інтеграція Google Maps
+  </div>
+
 </div>
 
 <script>
-function знайтиБанкомати() {
-  openMap("ATM");
-}
 
-function знайтиУкрсиббанк() {
-  openMap("УКРСИББАНК банкомат");
-}
+let lat = null;
+let lng = null;
 
-function знайтиКешбек() {
-  openMap("cash back магазин банкомат");
-}
+function getLocation() {
+  const status = document.getElementById("status");
 
-function openMap(query) {
   if (!navigator.geolocation) {
-    alert("Геолокація не підтримується");
+    status.innerText = "Геолокація не підтримується";
     return;
   }
 
-  navigator.geolocation.getCurrentPosition((pos) => {
-    const lat = pos.coords.latitude;
-    const lon = pos.coords.longitude;
+  status.innerText = "🔄 Визначаємо місцезнаходження...";
 
-    const url = `https://www.google.com/maps/search/${query}/@${lat},${lon},15z`;
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      lat = pos.coords.latitude;
+      lng = pos.coords.longitude;
 
-    window.open(url, "_blank");
-  }, () => {
-    alert("Доступ до геолокації заборонено");
-  });
+      status.innerText = "✅ Геолокацію визначено! Тепер оберіть категорію.";
+    },
+    () => {
+      status.innerText = "❌ Доступ до геолокації заборонено";
+    }
+  );
 }
+
+function search(type) {
+
+  if (!lat || !lng) {
+    alert("Спочатку натисніть 'Визначити геолокацію'");
+    return;
+  }
+
+  let query = "ATM";
+
+  if (type === "ukrsib") query = "УКРСИББАНК банкомат";
+  if (type === "atm") query = "банкомат";
+  if (type === "cashback") query = "cash back магазин";
+  if (type === "fuel") query = "АЗС готівка";
+
+  const url = `https://www.google.com/maps/search/${query}/@${lat},${lng},15z`;
+
+  document.getElementById("status").innerText =
+    "🗺️ Відкриваємо Google Maps...";
+
+  window.open(url, "_blank");
+}
+
 </script>
 
 </body>
