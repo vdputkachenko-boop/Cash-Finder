@@ -6,93 +6,115 @@
 <title>Готівка поруч</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-  background: #0b1220;
-  color: white;
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: radial-gradient(circle at top, #0f172a, #0b1220);
+  color:white;
 }
 
-.header {
-  padding: 28px 20px;
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
-  border-bottom-left-radius: 22px;
-  border-bottom-right-radius: 22px;
+/* HEADER */
+.header{
+  padding:28px 20px;
+  background: linear-gradient(135deg,#1d4ed8,#2563eb);
+  border-bottom-left-radius:24px;
+  border-bottom-right-radius:24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 24px;
+.header h1{
+  margin:0;
+  font-size:22px;
+  font-weight:800;
 }
 
-.header p {
-  margin-top: 8px;
-  font-size: 13px;
-  opacity: 0.9;
+.header p{
+  margin-top:6px;
+  font-size:13px;
+  opacity:0.85;
 }
 
-.container {
-  padding: 18px;
+/* CONTAINER */
+.container{
+  padding:18px;
+  max-width:520px;
+  margin:auto;
 }
 
-.status {
-  background: rgba(255,255,255,0.05);
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 14px;
-  font-size: 13px;
-  color: #93c5fd;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.card {
+/* STATUS */
+.status{
   background: rgba(255,255,255,0.06);
-  padding: 16px;
-  border-radius: 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.2s;
-  border: 1px solid rgba(255,255,255,0.08);
+  padding:12px;
+  border-radius:14px;
+  font-size:13px;
+  color:#93c5fd;
+  border:1px solid rgba(255,255,255,0.08);
 }
 
-.card:hover {
-  transform: translateY(-3px);
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
+
+/* CARDS */
+.card{
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:16px;
+  border-radius:16px;
+  text-align:center;
+  cursor:pointer;
+  transition:0.25s;
+  backdrop-filter: blur(10px);
+}
+
+.card:hover{
+  transform: translateY(-4px);
   background: rgba(255,255,255,0.1);
 }
 
-.icon {
-  font-size: 26px;
-  margin-bottom: 6px;
+.icon{
+  font-size:28px;
+  margin-bottom:6px;
 }
 
-.btn {
-  width: 100%;
-  margin-top: 16px;
-  padding: 14px;
-  border: none;
-  border-radius: 14px;
-  background: #22c55e;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
+.card div:last-child{
+  font-size:13px;
+  font-weight:600;
+  opacity:0.9;
 }
 
-.btn:hover {
-  opacity: 0.9;
+/* BUTTON */
+.btn{
+  width:100%;
+  margin-top:16px;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background: linear-gradient(135deg,#22c55e,#16a34a);
+  color:white;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 8px 20px rgba(34,197,94,0.25);
 }
 
-.footer {
-  text-align: center;
-  font-size: 12px;
-  opacity: 0.6;
-  margin-top: 22px;
-  padding-bottom: 20px;
+.btn:active{
+  transform: scale(0.98);
 }
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  font-size:11px;
+  opacity:0.5;
+  margin-top:18px;
+}
+
 </style>
 </head>
 
@@ -106,7 +128,7 @@ body {
 <div class="container">
 
   <div class="status" id="status">
-    📍 Очікування визначення геолокації...
+    📍 Очікування геолокації...
   </div>
 
   <div class="grid">
@@ -118,12 +140,12 @@ body {
 
     <div class="card" onclick="search('atm')">
       <div class="icon">💳</div>
-      <div>ІНШІ БАНКИ</div>
+      <div>БАНКОМАТИ</div>
     </div>
 
     <div class="card" onclick="search('cash')">
       <div class="icon">🛒</div>
-      <div>КАСА CASH BACK</div>
+      <div>CASH BACK</div>
     </div>
 
     <div class="card" onclick="search('fuel')">
@@ -138,7 +160,7 @@ body {
   </button>
 
   <div class="footer">
-    Нескорені | Юрковецький ліцей
+    Smart Cash Finder • Prototype
   </div>
 
 </div>
@@ -148,46 +170,68 @@ body {
 let lat = null;
 let lng = null;
 
-function getLocation() {
+/* GEOLOCATION */
+function getLocation(){
   const status = document.getElementById("status");
 
-  if (!navigator.geolocation) {
-    status.innerText = "Геолокація не підтримується";
+  if(!navigator.geolocation){
+    status.innerText = "❌ Геолокація не підтримується";
     return;
   }
 
   status.innerText = "🔄 Визначаємо місцезнаходження...";
 
-  navigator.geolocation.getCurrentPosition((pos) => {
-    lat = pos.coords.latitude;
-    lng = pos.coords.longitude;
+  navigator.geolocation.getCurrentPosition(
+    (pos)=>{
 
-    status.innerText = "✅ Локацію визначено. Оберіть категорію.";
-  }, () => {
-    status.innerText = "❌ Доступ до геолокації заборонено";
-  });
+      lat = pos.coords.latitude;
+      lng = pos.coords.longitude;
+
+      status.innerText = "✅ Локацію отримано. Оберіть категорію.";
+
+    },
+    ()=>{
+      status.innerText = "❌ Доступ до геолокації заборонено";
+    },
+    {
+      enableHighAccuracy:true,
+      timeout:10000
+    }
+  );
 }
 
-function search(type) {
+/* SEARCH */
+function search(type){
 
-  if (!lat || !lng) {
-    alert("Спочатку натисніть 'Визначити місцезнаходження'");
+  if(lat === null || lng === null){
+    alert("Спочатку визначте місцезнаходження 📍");
     return;
   }
 
-  let q = "ATM";
+  let query = "";
 
-  if (type === "ukrsib") q = "УКРСИББАНК банкомат";
-  if (type === "atm") q = "банкомат";
-  if (type === "cash") q = "cash back магазин";
-  if (type === "fuel") q = "АЗС готівка";
+  switch(type){
+    case "ukrsib":
+      query = "UKRSIBBANK ATM";
+      break;
+    case "atm":
+      query = "ATM near me";
+      break;
+    case "cash":
+      query = "cashback store";
+      break;
+    case "fuel":
+      query = "gas station ATM cash";
+      break;
+  }
 
-  const url = `https://www.google.com/maps/search/${q}/@${lat},${lng},15z`;
+  const url = `https://www.google.com/maps/search/${encodeURIComponent(query)}/@${lat},${lng},15z`;
 
   document.getElementById("status").innerText =
-    "🗺️ Відкриваємо карту...";
+    "🗺️ Відкриваємо Google Maps...";
 
   window.open(url, "_blank");
+
 }
 
 </script>
